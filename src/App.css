@@ -130,7 +130,6 @@
   text-align: left;
 
   cursor: pointer;
-  z-index: 100;
 }
 
 
@@ -149,5 +148,53 @@
   cursor: pointer;
   z-index: 100;
 }
+
+.task-text {
+  display: flex;
+  width:100%;
+  padding-left:10px;
+}
+.edit-task-text {
+  display: flex;
+  width:100%;
+  padding-left:10px;
+  background-color: #ffffff1c;
+  border-radius: 4px;
+  padding-bottom:2px;
+}
+
+.edit-button {
+  padding-left:5px;
+  padding-right:5px;
+  cursor: pointer;
+  z-index: 150;
+
+  color: #0c75ff00;
+  transition: color 0.2s;
+}
+.task:hover .edit-button:not(:hover) {
+  color: #0c75ff6e;
+}
+.edit-button:hover {
+  color: #0c75ff;
+  transition: color 0.2s;
+}
+
+.delete-button {
+  padding-right:5px;
+  cursor: pointer;
+  z-index: 150;
+
+  color: #0c75ff00;
+  transition: color 0.2s;
+}
+.task:hover .delete-button:not(:hover) {
+  color: #0c75ff6e;
+}
+.delete-button:hover {
+  color: #0c75ff;
+  transition: color 0.2s;
+}
+
 
 
