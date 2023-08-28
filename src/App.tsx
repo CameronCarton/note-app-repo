@@ -2,14 +2,19 @@ import NavBar from "./components/NavBar";
 import Section from "./components/Section";
 import '../src/App.css'
 
+import { useEffect, useState } from 'react'
+
 function App() {
 
-  const themeColors = ["#13223F", "#000000", "#FFFFFF", "#0C75FF"];
-  //const themeColors = ["#FFFFFF", "#DDDCE5", "#535789", "#0C75FF"];
+  const [themeColors,setThemeColors] = useState(["#13223F", "#000000", "#FFFFFF", "#0C75FF"]);
+
+  const updateThemeColors = (newColors:string[]) => {
+    setThemeColors(newColors);
+  };
 
   return (
     <>
-      <NavBar themeColors={themeColors}/>
+      <NavBar themeColors={themeColors} updateThemeColors={updateThemeColors}/>
       <Section themeColors={themeColors}/>
     </>
   )
