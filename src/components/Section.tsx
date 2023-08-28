@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, ChangeEvent } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { faPen } from '@fortawesome/free-solid-svg-icons'
@@ -60,11 +60,16 @@ function Section({themeColors}: SectionProps) {
     }
 
     // edit the text of a task
-    const confirmEditTask = (list:number, index:number, newEdit:string) => {
+    const confirmEditTask = (list:number, index:number) => {
         setEditTaskText([0,list,index]);
 
+        let newTaskText = "";
+        if(editRef.current.value!=null){
+            newTaskText = editRef.current.value;
+        }
+
         const newTasks = [...tasks];
-        newTasks[list][index] = newEdit;
+        newTasks[list][index] = editRef.current.value;
         setTasks(newTasks);
         console.log("Task edit confirmed");
     }
@@ -99,6 +104,19 @@ function Section({themeColors}: SectionProps) {
             setGridDisplay("flex");
         }
     }
+
+
+    //update edit box size automatically
+    const handleInputChange = () => {
+        if (editRef.current) {
+          editRef.current.style.height = 'auto';
+          editRef.current.style.height = `${editRef.current.scrollHeight}px`;
+        }
+    };
+
+    useEffect(() => {
+        handleInputChange();
+    }, [editTaskText]);
 
 
     return (
@@ -193,7 +211,12 @@ function Section({themeColors}: SectionProps) {
                                         }}
                                         >
                                             {editTaskText[0]==1 && editTaskText[1]==list_index+2 && editTaskText[2]==index ?(
-                                                <div className="edit-task-text" contentEditable="true" ref={editRef}>{task}</div>
+                                                <textarea className="edit-task-text" 
+                                                ref={editRef} 
+                                                defaultValue={task} 
+                                                rows={1}
+                                                style={{resize: "none", lineHeight: '1.5',overflow: 'hidden'}}
+                                                onChange={handleInputChange}></textarea>
                                             ) : (
                                                 <div className="task-text" onClick={() => selectTask(list_index+2,index,task)}>{task}</div>
                                             )}
@@ -202,7 +225,7 @@ function Section({themeColors}: SectionProps) {
                                                 
                                                 {editTaskText[0]==1 && editTaskText[1]==list_index+2 && editTaskText[2]==index ?(
                                                     <div className="edit-button" 
-                                                    onClick={() => confirmEditTask(list_index+2,index,editRef.current.innerText)}><FontAwesomeIcon icon={faCheck} /></div>
+                                                    onClick={() => confirmEditTask(list_index+2,index)}><FontAwesomeIcon icon={faCheck} /></div>
                                                 ) : (
                                                     <div className="edit-button" 
                                                     onClick={() => editTask(list_index+2,index)}><FontAwesomeIcon icon={faPen} size="xs"/></div>

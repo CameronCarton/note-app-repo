@@ -119,10 +119,11 @@
 
 .task {
   background-color: #0a153a;
-  height: 24px;
+  min-height: 26px;
   border-radius: 4px;
   border: 1px solid #111d44;
   margin-bottom:5px;
+  padding-bottom:1px;
   display: flex;
   justify-content: space-between;
 
@@ -151,16 +152,29 @@
 
 .task-text {
   display: flex;
-  width:100%;
-  padding-left:10px;
+  max-width:77%;
+  min-width:77%;
+  white-space: normal;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  padding:1px;
+  padding-left:11px;
+  font-size: 1rem;
+  font-family: "Arial", sans-serif;
 }
 .edit-task-text {
   display: flex;
-  width:100%;
+  max-width:77%;
+  min-width:77%;
+  max-height: 200px;
+  padding:0px;
   padding-left:10px;
   background-color: #ffffff1c;
+  white-space: normal;
+  overflow-wrap: break-word;
   border-radius: 4px;
-  padding-bottom:2px;
+  font-size: 1rem;
+  font-family: "Arial", sans-serif;
 }
 
 .edit-button {
@@ -170,6 +184,7 @@
   z-index: 150;
 
   color: #0c75ff00;
+  text-align: center;
   transition: color 0.2s;
 }
 .task:hover .edit-button:not(:hover) {
