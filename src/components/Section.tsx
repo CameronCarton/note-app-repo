@@ -18,7 +18,7 @@ function Section({themeColors}: SectionProps) {
     const [tasks, setTasks] = useState([
         [],
         [],
-        ["Task 1", "Task 2"],
+        [],
     ]);
     const [toDoList, setToDoList] = useState(["To Do"]);
     const editRef = useRef(null);
@@ -68,10 +68,17 @@ function Section({themeColors}: SectionProps) {
             newTaskText = editRef.current.value;
         }
 
-        const newTasks = [...tasks];
-        newTasks[list][index] = editRef.current.value;
-        setTasks(newTasks);
-        console.log("Task edit confirmed");
+        if(newTaskText!=""){
+            //confirm edit
+            const newTasks = [...tasks];
+            newTasks[list][index] = editRef.current.value;
+            setTasks(newTasks);
+            console.log("Task edit confirmed");
+        }else{
+            //if task text is blank (""), then delete
+            deleteTask(list, index);
+        }
+        
     }
 
     // select a task to move
@@ -98,7 +105,7 @@ function Section({themeColors}: SectionProps) {
         console.log("New ToDo list added");
 
         //change grid display when many lists added
-        if(newToDoList.length >3){
+        if(newToDoList.length >=3){
             setGridDisplay("inline-grid");
         }else{
             setGridDisplay("flex");
@@ -116,6 +123,10 @@ function Section({themeColors}: SectionProps) {
 
     useEffect(() => {
         handleInputChange();
+        if(editTaskText[0]==1){
+            editRef.current.focus();
+        }
+        
     }, [editTaskText]);
 
 
@@ -143,7 +154,7 @@ function Section({themeColors}: SectionProps) {
                                         style={{
                                             borderColor: themeColors[0],
                                             backgroundColor: themeColors[0],
-                                            color: themeColors[2],
+                                            color: themeColors[3],
                                         }}
                                         >
                                             <div className="task-text" onClick={() => selectTask(0,index,task)}>{task}</div>
@@ -215,10 +226,12 @@ function Section({themeColors}: SectionProps) {
                                                 ref={editRef} 
                                                 defaultValue={task} 
                                                 rows={1}
-                                                style={{resize: "none", lineHeight: '1.5',overflow: 'hidden'}}
+                                                style={{color: themeColors[2], resize: "none", lineHeight: '1.5',overflow: 'hidden'}}
                                                 onChange={handleInputChange}></textarea>
                                             ) : (
-                                                <div className="task-text" onClick={() => selectTask(list_index+2,index,task)}>{task}</div>
+                                                <div className="task-text" 
+                                                style={{color: themeColors[2]}}
+                                                onClick={() => selectTask(list_index+2,index,task)}>{task}</div>
                                             )}
 
                                             <div style={{display:"flex"}}>
@@ -246,11 +259,13 @@ function Section({themeColors}: SectionProps) {
                             </div>
                         </div>
                         ))}
+                        <div className="add-list" 
+                            style={{color: themeColors[0], backgroundColor:themeColors[3]}}
+                            onClick={() => addToDoList()}
+                            ><FontAwesomeIcon icon={faPlus} size="sm"/>
+                        </div>
                     </div>
-                    <div className="add-task" 
-                        style={{color: themeColors[0], backgroundColor:themeColors[3]}}
-                        onClick={() => addToDoList()}
-                        ><FontAwesomeIcon icon={faPlus} size="sm"/></div>
+                    
 
                 </div>
             </div>
