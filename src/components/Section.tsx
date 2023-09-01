@@ -6,6 +6,8 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { faThumbTack } from '@fortawesome/free-solid-svg-icons'
 
 interface SectionProps {
@@ -16,6 +18,7 @@ function Section({themeColors}: SectionProps) {
 
     const toDoColor: string = themeColors[3];
     const [editTaskText,setEditTaskText] = useState([0,0,0]);
+    const [editListText,setEditListText] = useState([0,0]);
     const [selectedTaskText,setSelectedTaskText] = useState("");
     const [tasks, setTasks] = useState<string[][]>([
         [],
@@ -128,6 +131,11 @@ function Section({themeColors}: SectionProps) {
         setTasks(newTasks);
     };
 
+    // edit the text of a list
+    const editList = (list:number) => {
+        setEditListText([1,list]);
+    }
+
 
     //update edit box size automatically
     const handleInputChange = () => {
@@ -139,11 +147,11 @@ function Section({themeColors}: SectionProps) {
 
     useEffect(() => {
         handleInputChange();
-        if(editTaskText[0]==1){
+        if(editTaskText[0]==1 || editListText[0]==1){
             editRef.current.focus();
         }
         
-    }, [editTaskText]);
+    }, [editTaskText,editListText]);
 
 
     return (
@@ -224,7 +232,35 @@ function Section({themeColors}: SectionProps) {
                             background: `linear-gradient(to bottom right, ${themeColors[0]}, ${themeColors[1]})`}}
                             onClick={() => addTaskFromList(listIndex+2)}>
                                 <div className="list-bar" style={{backgroundColor:toDoColor}}></div>
-                                <div className="list-title" style={{color:toDoColor}}>{list}</div>
+                                <div className="list-title" 
+                                style={{color:toDoColor}}>
+                                    <div style={{display:"flex"}}>
+                                        <div className="edit-button-list" style={{paddingTop:"1px",paddingRight:"0px",paddingLeft:"10px"}}
+                                        onClick={() => shiftTask(listIndex+2,listIndex,-1)}>
+                                            <FontAwesomeIcon icon={faChevronLeft} size="sm"/>
+                                        </div>
+                                        <div className="edit-button-list" style={{paddingTop:"1px"}}
+                                        onClick={() => shiftTask(listIndex+2,listIndex,1)}>
+                                            <FontAwesomeIcon icon={faChevronRight} size="sm"/>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        {list}
+                                    </div>
+                                    <div style={{display:"flex"}}>
+                                        {editListText[0]==1 && editListText[1]==listIndex+2 ?(
+                                            <div className="edit-button-list" style={{paddingLeft:"0px"}}
+                                            onClick={() => confirmEditTask(listIndex+2,listIndex)}><FontAwesomeIcon icon={faCheck} /></div>
+                                        ) : (
+                                            <div className="edit-button-list" style={{paddingRight:"0px"}}
+                                            onClick={() => editList(listIndex+2)}><FontAwesomeIcon icon={faPen} size="xs"/></div>
+                                        )}
+                                        <div className="edit-button-list" style={{paddingRight:"10px"}}
+                                        onClick={() => deleteTask(listIndex+2,listIndex)}>
+                                            <FontAwesomeIcon icon={faXmark} />
+                                        </div>
+                                    </div>
+                                </div>         
                                 <div className="task-list-holder">
 
                                     {tasks[listIndex+2].map((task, index) => (
