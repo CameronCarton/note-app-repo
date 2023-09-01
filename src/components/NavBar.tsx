@@ -10,7 +10,7 @@ const NavBar: React.FC<NavBarProps> = ({ themeColors, updateThemeColors }) => {
     const [themeMode, setThemeMode] = useState(0);
 
     const darkTheme = ["#13223F", "#000000", "#FFFFFF", "#0C75FF"];
-    const lightTheme = ["#FFFFFF", "#DDDCE5", "#535789", "#0C75FF"];
+    const lightTheme = ["#FFFFFF", "#DDDCE5", "#313451", "#0C75FF"];
 
     const changeTheme = () => {
         let themeSwitch = themeMode;

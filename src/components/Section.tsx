@@ -1,14 +1,12 @@
-import { useEffect, useState, useRef, ChangeEvent } from 'react'
+import Task from "./Task";
+import { useEffect, useState, useRef} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { faPen } from '@fortawesome/free-solid-svg-icons'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
-import { faThumbTack } from '@fortawesome/free-solid-svg-icons'
 
 interface SectionProps {
     themeColors: string[];
@@ -218,26 +216,29 @@ function Section({themeColors}: SectionProps) {
                     <div className="list-container">
                         <div className="list-holder">
                             <div className="list" 
-                            style={{ width: '200px', borderColor: toDoColor, 
+                            style={{borderColor: toDoColor, 
                             background: `linear-gradient(to bottom right, ${themeColors[0]}, ${themeColors[1]})`}}
                             onClick={() => addTaskFromList(0)}>
                                 <div className="list-bar" style={{backgroundColor:toDoColor}}></div>
-                                <div className="list-title" style={{color:toDoColor}}>Completed</div>
+                                <div className="list-title" 
+                                style={{color:toDoColor,display:"flex",textAlign:"center",justifyContent:"center"}}>
+                                    Completed</div>
                                 <div className="task-list-holder">
 
-                                {tasks[0].map((task, index) => (
-                                        <div
-                                        key={index}
-                                        className="task"
-                                        style={{
-                                            borderColor: themeColors[0],
-                                            backgroundColor: themeColors[0],
-                                            color: themeColors[3],
-                                        }}
-                                        >
-                                            <div className="task-text" onClick={() => selectTask(0,index,task)}>{task}</div>
-                                        </div>
-                                    ))}
+                                    <Task 
+                                    listType={0}
+                                    themeColors0={themeColors[0]} 
+                                    themeColors2={themeColors[3]} 
+                                    editTaskText={editTaskText} 
+                                    tasks={tasks} 
+                                    listIndex={0} 
+                                    editRef={editRef}
+                                    handleInputChange={handleInputChange} 
+                                    selectTask={selectTask} 
+                                    shiftTask={shiftTask} 
+                                    confirmEditTask={confirmEditTask} 
+                                    editTask={editTask} 
+                                    deleteTask={deleteTask}/>
 
                                 </div>
                             </div>
@@ -249,22 +250,25 @@ function Section({themeColors}: SectionProps) {
                             background: `linear-gradient(to bottom right, ${themeColors[0]}, ${themeColors[1]})`}}
                             onClick={() => addTaskFromList(1)}>
                                 <div className="list-bar" style={{backgroundColor:themeColors[2]}}></div>
-                                <div className="list-title" style={{color:themeColors[2]}}>Active Tasks</div>
+                                <div className="list-title" 
+                                style={{color:themeColors[2],display:"flex",textAlign:"center",justifyContent:"center"}}>
+                                    Active Tasks</div>
                                 <div className="task-list-holder">
 
-                                {tasks[1].map((task, index) => (
-                                        <div
-                                        key={index}
-                                        className="task"
-                                        style={{
-                                            borderColor: themeColors[0],
-                                            backgroundColor: themeColors[0],
-                                            color: themeColors[2],
-                                        }}
-                                        >
-                                            <div className="task-text" onClick={() => selectTask(1,index,task)}>{task}</div>
-                                        </div>
-                                    ))}
+                                    <Task 
+                                    listType={1}
+                                    themeColors0={themeColors[0]} 
+                                    themeColors2={themeColors[2]} 
+                                    editTaskText={editTaskText} 
+                                    tasks={tasks} 
+                                    listIndex={1} 
+                                    editRef={editRef}
+                                    handleInputChange={handleInputChange} 
+                                    selectTask={selectTask} 
+                                    shiftTask={shiftTask} 
+                                    confirmEditTask={confirmEditTask} 
+                                    editTask={editTask} 
+                                    deleteTask={deleteTask}/>
 
                                 </div>
                             </div>
@@ -330,61 +334,20 @@ function Section({themeColors}: SectionProps) {
                                 </div>         
                                 <div className="task-list-holder">
 
-                                    {tasks[listIndex+2].map((task, index) => (
-                                        <div
-                                        key={index}
-                                        className="task"
-                                        style={{
-                                            backgroundColor: themeColors[0],
-                                            color: themeColors[2],
-                                        }}
-                                        >
-                                            {editTaskText[0]==1 && editTaskText[1]==listIndex+2 && editTaskText[2]==index ?(
-                                                <textarea className="edit-task-text" 
-                                                ref={editRef} 
-                                                defaultValue={task} 
-                                                rows={1}
-                                                style={{color: themeColors[2], resize: "none", lineHeight: '1.5',overflow: 'hidden'}}
-                                                onChange={handleInputChange}></textarea>
-                                            ) : (
-                                                <div className="task-text" 
-                                                style={{color: themeColors[2]}}>{task}</div>
-                                            )}
-
-                                            <div style={{display:"flex",position:"absolute", width:"230px", justifyContent:"left", paddingLeft:"5px"}}>
-                                                <div className="delete-button" style={{paddingTop:"1px"}}
-                                                onClick={() => selectTask(listIndex+2,index,task)}>
-                                                    <FontAwesomeIcon icon={faThumbTack} />
-                                                </div>
-                                                <div style={{display:"flex", paddingLeft:"2px"}}>
-                                                    <div className="delete-button" style={{paddingTop:"1px",paddingRight:"0px"}}
-                                                    onClick={() => shiftTask(listIndex+2,index,-1)}>
-                                                        <FontAwesomeIcon icon={faChevronUp} size="sm"/>
-                                                    </div>
-                                                    <div className="delete-button" style={{paddingRight:"1px"}}
-                                                    onClick={() => shiftTask(listIndex+2,index,1)}>
-                                                        <FontAwesomeIcon icon={faChevronDown} size="sm"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div style={{display:"flex", position:"absolute", width:"232px", justifyContent:"right"}}>
-                                                
-                                                {editTaskText[0]==1 && editTaskText[1]==listIndex+2 && editTaskText[2]==index ?(
-                                                    <div className="edit-button" 
-                                                    onClick={() => confirmEditTask(listIndex+2,index)}><FontAwesomeIcon icon={faCheck} /></div>
-                                                ) : (
-                                                    <div className="edit-button" 
-                                                    onClick={() => editTask(listIndex+2,index)}><FontAwesomeIcon icon={faPen} size="xs"/></div>
-                                                )}
-
-                                                <div className="delete-button" 
-                                                onClick={() => deleteTask(listIndex+2,index)}>
-                                                    <FontAwesomeIcon icon={faXmark} />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                    <Task 
+                                        listType={2}
+                                        themeColors0={themeColors[0]} 
+                                        themeColors2={themeColors[2]} 
+                                        editTaskText={editTaskText} 
+                                        tasks={tasks} 
+                                        listIndex={listIndex+2} 
+                                        editRef={editRef}
+                                        handleInputChange={handleInputChange} 
+                                        selectTask={selectTask} 
+                                        shiftTask={shiftTask} 
+                                        confirmEditTask={confirmEditTask} 
+                                        editTask={editTask} 
+                                        deleteTask={deleteTask}/>
 
                                     <div className="add-task" 
                                     style={{color: themeColors[3], backgroundColor:themeColors[0]}}
