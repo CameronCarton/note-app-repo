@@ -59,6 +59,20 @@ function Section({themeColors}: SectionProps) {
         console.log("Task deleted");
     }
 
+    // delete list
+    const deleteList = (list:number) => {
+        //remove list from tasks
+        const newTasks = [...tasks];
+        newTasks.splice(list, 1);
+        setTasks(newTasks);
+
+        //remove list from toDo list
+        const newLists = [...toDoList];
+        newLists.splice(list-2, 1);
+        setToDoList(newLists);
+        console.log("List deleted");
+    }
+
     // edit the text of a task
     const editTask = (list:number, index:number) => {
         setEditTaskText([1,list,index]);
@@ -83,6 +97,23 @@ function Section({themeColors}: SectionProps) {
             //if task text is blank (""), then delete
             deleteTask(list, index);
         }
+        
+    }
+
+    // edit the text of a List
+    const confirmEditList = (list:number) => {
+        setEditListText([0,list]);
+
+        let newListText = "To Do";
+        if(editRef.current.value!=null){
+            newListText = editRef.current.value;
+        }
+
+        //confirm edit
+        const newLists = [...toDoList];
+        newLists[list-2] = editRef.current.value;
+        setToDoList(newLists);
+        console.log("Task edit confirmed");
         
     }
 
@@ -117,7 +148,30 @@ function Section({themeColors}: SectionProps) {
         }
     }
 
-    //shift task position
+    // shift list position
+    const shiftList = (listIndex:number, shiftAmount:number) => {
+        const newTasks = [...tasks];
+        const newLists = [...toDoList];
+        const listToShift = newTasks[listIndex];
+        const listNameToShift = newLists[listIndex-2];
+    
+        if(listIndex>2 || shiftAmount>0){
+            //shift tasks
+            newTasks.splice(listIndex, 1); // Remove from current position
+            newTasks.splice(listIndex + shiftAmount, 0, listToShift); // Insert at new position
+
+            //shift list name
+            newLists.splice(listIndex-2, 1); // Remove from current position
+            newLists.splice(listIndex-2 + shiftAmount, 0, listNameToShift); // Insert at new position
+
+            console.log("List Shifted position");
+        }
+        
+        setTasks(newTasks);
+        setToDoList(newLists);
+    };
+
+    // shift task position
     const shiftTask = (listIndex:number, index:number, shiftAmount:number) => {
         const newTasks = [...tasks];
         const taskToShift = newTasks[listIndex][index];
@@ -236,27 +290,40 @@ function Section({themeColors}: SectionProps) {
                                 style={{color:toDoColor}}>
                                     <div style={{display:"flex"}}>
                                         <div className="edit-button-list" style={{paddingTop:"1px",paddingRight:"0px",paddingLeft:"10px"}}
-                                        onClick={() => shiftTask(listIndex+2,listIndex,-1)}>
+                                        onClick={() => shiftList(listIndex+2,-1)}>
                                             <FontAwesomeIcon icon={faChevronLeft} size="sm"/>
                                         </div>
                                         <div className="edit-button-list" style={{paddingTop:"1px"}}
-                                        onClick={() => shiftTask(listIndex+2,listIndex,1)}>
+                                        onClick={() => shiftList(listIndex+2,1)}>
                                             <FontAwesomeIcon icon={faChevronRight} size="sm"/>
                                         </div>
                                     </div>
+
                                     <div>
-                                        {list}
+                                        {editListText[0]==1 && editListText[1]==listIndex+2 ?(
+                                            <textarea  className="edit-list-text"
+                                            ref={editRef} 
+                                            defaultValue={list} 
+                                            rows={1}
+                                            style={{color: themeColors[2], fontWeight: "bold", 
+                                            resize: "none",marginTop:"4px",overflow: "hidden",
+                                            padding:"0px",textAlign:"center"}}
+                                            onChange={handleInputChange}></textarea>
+                                        ) : (
+                                            <div style={{maxHeight:"30px",overflow: "hidden"}}>{list}</div>
+                                        )}
                                     </div>
+                                    
                                     <div style={{display:"flex"}}>
                                         {editListText[0]==1 && editListText[1]==listIndex+2 ?(
-                                            <div className="edit-button-list" style={{paddingLeft:"0px"}}
-                                            onClick={() => confirmEditTask(listIndex+2,listIndex)}><FontAwesomeIcon icon={faCheck} /></div>
+                                            <div className="edit-button-list" style={{paddingLeft:"5px",paddingRight:"0px"}}
+                                            onClick={() => confirmEditList(listIndex+2)}><FontAwesomeIcon icon={faCheck} /></div>
                                         ) : (
                                             <div className="edit-button-list" style={{paddingRight:"0px"}}
                                             onClick={() => editList(listIndex+2)}><FontAwesomeIcon icon={faPen} size="xs"/></div>
                                         )}
                                         <div className="edit-button-list" style={{paddingRight:"10px"}}
-                                        onClick={() => deleteTask(listIndex+2,listIndex)}>
+                                        onClick={() => deleteList(listIndex+2)}>
                                             <FontAwesomeIcon icon={faXmark} />
                                         </div>
                                     </div>

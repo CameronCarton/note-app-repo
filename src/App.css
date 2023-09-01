@@ -97,7 +97,7 @@
 }
 
 .list-title {
-  background-color: #ff000000;
+  background-color: #00000000;
   width: 100%;
   height: 30px;
   display: flex;
@@ -195,6 +195,17 @@
   padding-left:5px;
   padding-right:5px;
   margin-top:25px;
+  background-color: #ffffff1c;
+  white-space: normal;
+  overflow-wrap: break-word;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: "Arial", sans-serif;
+  transition: all 0.4s;
+}
+.edit-list-text {
+  display: flex;
+  width: 99%;
   background-color: #ffffff1c;
   white-space: normal;
   overflow-wrap: break-word;
