@@ -358,11 +358,13 @@ function Section({themeColors}: SectionProps) {
                             </div>
                         </div>
                         ))}
-                        <div className="add-list" 
+                        {toDoList.length<10 &&(
+                            <div className="add-list" 
                             style={{color: themeColors[0], backgroundColor:themeColors[3]}}
                             onClick={() => addToDoList()}
                             ><FontAwesomeIcon icon={faPlus} size="sm"/>
                         </div>
+                        )}
                     </div>
                     
 

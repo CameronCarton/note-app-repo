@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons'
+import { faCircle } from '@fortawesome/free-solid-svg-icons'
 
 interface NavBarProps {
     themeColors: string[];
@@ -32,8 +35,23 @@ const NavBar: React.FC<NavBarProps> = ({ themeColors, updateThemeColors }) => {
     return (
         <>
             <div className="navbar" style={{backgroundColor:themeColors[0]}}>
-                <div className="title" style={{color:themeColors[2]}}>eZnote</div>
-                <div className="options" style={{color:themeColors[2]}} onClick={changeTheme}>●●●</div>
+                <div className="title" style={{color:themeColors[2], justifyContent:"center",fontWeight: "bold"}}>eZnote</div>
+                <div className="title" style={{color:themeColors[2]}}>
+
+                    
+                    
+                    <div style={{display:"flex",paddingTop:"5px"}}>
+                        <div className="options" style={{color:themeColors[2]}} onClick={changeTheme}>Developer</div>
+                        {themeMode==1 ?(
+                            <div className="options" style={{color:themeColors[2]}} onClick={changeTheme}>
+                            <FontAwesomeIcon icon={faCircleHalfStroke} /></div>
+                        ):(
+                            <div className="options" style={{color:themeColors[2]}} onClick={changeTheme}>
+                            <FontAwesomeIcon icon={faCircle} /></div>
+                        )}
+                    </div>
+                </div>
+                
             </div>
         </>
     )
