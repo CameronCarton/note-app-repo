@@ -303,3 +303,8 @@
   height: 115px;
   transition: all 0.3s;
 }
+
+
+.follower {
+  position: absolute;
+}

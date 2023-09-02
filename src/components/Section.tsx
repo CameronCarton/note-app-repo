@@ -24,8 +24,11 @@ function Section({themeColors}: SectionProps) {
         ["Finish the to do list website", "make everything better", "go to sleep"],
     ]);
     const [toDoList, setToDoList] = useState(["To Do"]);
-    const editRef = useRef(null);
     const [gridDisplay, setGridDisplay] = useState("flex");
+    const editRef = useRef<HTMLTextAreaElement>(null);
+    const followerRef = useRef<HTMLDivElement>(null);
+
+
     
     // add a new task to a list
     const addTask = (list:number) => {
@@ -69,6 +72,13 @@ function Section({themeColors}: SectionProps) {
         newLists.splice(list-2, 1);
         setToDoList(newLists);
         console.log("List deleted");
+
+        //change grid display when many lists added
+        if(newLists.length >=3){
+            setGridDisplay("inline-grid");
+        }else{
+            setGridDisplay("flex");
+        }
     }
 
     // edit the text of a task
@@ -81,14 +91,16 @@ function Section({themeColors}: SectionProps) {
         setEditTaskText([0,list,index]);
 
         let newTaskText = "";
-        if(editRef.current.value!=null){
+        if(editRef.current!=null){
             newTaskText = editRef.current.value;
         }
 
         if(newTaskText!=""){
             //confirm edit
             const newTasks = [...tasks];
-            newTasks[list][index] = editRef.current.value;
+            if(editRef.current!=null){
+                newTasks[list][index] = editRef.current.value;
+            }
             setTasks(newTasks);
             console.log("Task edit confirmed");
         }else{
@@ -103,13 +115,15 @@ function Section({themeColors}: SectionProps) {
         setEditListText([0,list]);
 
         let newListText = "To Do";
-        if(editRef.current.value!=null){
+        if(editRef.current!=null){
             newListText = editRef.current.value;
         }
 
         //confirm edit
         const newLists = [...toDoList];
-        newLists[list-2] = editRef.current.value;
+        if(editRef.current!=null){
+            newLists[list-2] = editRef.current.value;
+        }
         setToDoList(newLists);
         console.log("Task edit confirmed");
         
@@ -199,11 +213,31 @@ function Section({themeColors}: SectionProps) {
 
     useEffect(() => {
         handleInputChange();
-        if(editTaskText[0]==1 || editListText[0]==1){
+        if(editRef.current!=null && (editTaskText[0]==1 || editListText[0]==1)){
             editRef.current.focus();
         }
         
     }, [editTaskText,editListText]);
+
+    useEffect(() => {
+        const follower = followerRef.current;
+
+        const handleMouseMove = (e: MouseEvent) => {
+            if (follower) {
+                const x = e.clientX;
+                const y = e.clientY;
+
+                // set the follower's position to the mouse position
+                follower.style.left = (x+5) + 'px';
+                follower.style.top = (y+5) + 'px';
+            }
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, []);
 
 
     return (
@@ -369,6 +403,15 @@ function Section({themeColors}: SectionProps) {
                     
 
                 </div>
+            </div>
+            <div className="follower" ref={followerRef}>
+                {selectedTaskText!="" &&(
+                    <div className="task" 
+                    style={{cursor:"auto",pointerEvents: "none",backgroundColor: themeColors[0],
+                    color: themeColors[2],border: '1px solid #0C75FF',maxWidth:"235px"}}>
+                        <div className="task-text" style={{cursor:"auto",pointerEvents: "none",color: themeColors[2],paddingTop:"0px"}}>{selectedTaskText}</div>
+                    </div>
+                )}
             </div>
         </>
     )
