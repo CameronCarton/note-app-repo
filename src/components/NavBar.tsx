@@ -30,7 +30,19 @@ const NavBar: React.FC<NavBarProps> = ({ themeColors, updateThemeColors }) => {
             console.log("Theme changed to Light mode");
         }
         setThemeMode(themeSwitch);
+        localStorage.setItem("theme",JSON.stringify(themeSwitch));
     }
+
+    useEffect(() => {
+
+        //load local storage data (theme)
+        let themeModeData = localStorage.getItem("theme");
+        if(themeModeData!=null){
+            if(JSON.parse(themeModeData) != themeMode)
+            changeTheme();
+        }
+
+    }, []);
 
     return (
         <>

@@ -20,14 +20,20 @@ function Section({themeColors}: SectionProps) {
     const [selectedTaskText,setSelectedTaskText] = useState("");
     const [tasks, setTasks] = useState<string[][]>([
         [],
+        ["Add a task in the To Do List"],
         [],
-        ["Finish the to do list website", "make everything better", "go to sleep"],
     ]);
     const [toDoList, setToDoList] = useState(["To Do"]);
     const [gridDisplay, setGridDisplay] = useState("flex");
     const editRef = useRef<HTMLTextAreaElement>(null);
     const followerRef = useRef<HTMLDivElement>(null);
 
+
+    //update local storag
+    const updateLocalStorage = () =>{
+        localStorage.setItem("taskList",JSON.stringify(tasks));
+        localStorage.setItem("toDoList",JSON.stringify(toDoList));
+    }
 
     
     // add a new task to a list
@@ -38,6 +44,8 @@ function Section({themeColors}: SectionProps) {
         console.log("New Task added");
 
         setEditTaskText([1,list,tasks[list].length-1]);
+
+        updateLocalStorage();
     }
 
     // add task from existing list to another list
@@ -50,6 +58,8 @@ function Section({themeColors}: SectionProps) {
             setSelectedTaskText("");
             console.log("Task added from list");
         }
+
+        updateLocalStorage();
     }
 
     // delete task from a list
@@ -58,6 +68,8 @@ function Section({themeColors}: SectionProps) {
         newTasks[list].splice(index, 1);
         setTasks(newTasks);
         console.log("Task deleted");
+
+        updateLocalStorage();
     }
 
     // delete list
@@ -79,11 +91,15 @@ function Section({themeColors}: SectionProps) {
         }else{
             setGridDisplay("flex");
         }
+
+        updateLocalStorage();
     }
 
     // edit the text of a task
     const editTask = (list:number, index:number) => {
         setEditTaskText([1,list,index]);
+
+        updateLocalStorage();
     }
 
     // edit the text of a task
@@ -108,6 +124,7 @@ function Section({themeColors}: SectionProps) {
             deleteTask(list, index);
         }
         
+        updateLocalStorage();
     }
 
     // edit the text of a List
@@ -127,6 +144,7 @@ function Section({themeColors}: SectionProps) {
         setToDoList(newLists);
         console.log("Task edit confirmed");
         
+        updateLocalStorage();
     }
 
     // select a task to move
@@ -136,6 +154,8 @@ function Section({themeColors}: SectionProps) {
             setSelectedTaskText(task);
             deleteTask(list,index);
         }
+
+        updateLocalStorage();
     }
 
     // add a new toDo list
@@ -158,6 +178,8 @@ function Section({themeColors}: SectionProps) {
         }else{
             setGridDisplay("flex");
         }
+
+        updateLocalStorage();
     }
 
     // shift list position
@@ -181,6 +203,8 @@ function Section({themeColors}: SectionProps) {
         
         setTasks(newTasks);
         setToDoList(newLists);
+
+        updateLocalStorage();
     };
 
     // shift task position
@@ -195,11 +219,15 @@ function Section({themeColors}: SectionProps) {
         }
         
         setTasks(newTasks);
+
+        updateLocalStorage();
     };
 
     // edit the text of a list
     const editList = (list:number) => {
         setEditListText([1,list]);
+
+        updateLocalStorage();
     }
 
 
@@ -220,6 +248,18 @@ function Section({themeColors}: SectionProps) {
     }, [editTaskText,editListText]);
 
     useEffect(() => {
+
+        //load local storage data
+        let taskData = localStorage.getItem("taskList");
+        if(taskData!=null){
+            setTasks(JSON.parse(taskData));
+        }
+        let toDoData = localStorage.getItem("toDoList");
+        if(toDoData!=null){
+            setToDoList(JSON.parse(toDoData));
+        }
+
+        //follower
         const follower = followerRef.current;
 
         const handleMouseMove = (e: MouseEvent) => {
@@ -237,6 +277,7 @@ function Section({themeColors}: SectionProps) {
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
         };
+
     }, []);
 
 
